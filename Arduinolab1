@@ -38,6 +38,11 @@ float celsius = 0;
 
 void setup() {
   // Start av OLED
+  if(!display.begin(SSD1306_SWITCHAPVCC, 0x3C)) {
+  Serial.println(F("SSD1306 allocation failed"));
+  for(;;);
+  }
+  
   delay(2000);
   display.clearDisplay();
   display.setTextSize(1);

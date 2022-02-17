@@ -1,0 +1,105 @@
+OPPGAVE 5
+
+// Declare values
+const int8_t EN1 = 11;
+const int8_t IN1 = 12;
+const int8_t IN2 = 13;
+int TILT_SENSOR = 2; 
+int value = 0;
+
+
+void setup() {
+  pinMode(EN1, OUTPUT);
+  pinMode(IN1, OUTPUT);
+  pinMode(IN2, OUTPUT);
+  pinMode(TILT_SENSOR, INPUT_PULLUP);
+  Serial.begin(9600);
+}
+void loop() {
+  value = digitalRead(TILT_SENSOR); // for emergency break
+  int motorSpeed = analogRead(A0);
+  
+  //This makes motor go clockwise
+  if (motorSpeed < 500){
+  digitalWrite(IN1, value);
+  digitalWrite(IN2, LOW);
+  //Map from 0-512 because that is the middle of the analogRead
+  //That makes it go both ways
+  motorSpeed = map(motorSpeed, 0, 512, 255, 0); 
+  analogWrite(EN1, motorSpeed);
+  Serial.println(motorSpeed);
+    Serial.println(value);
+    delay(100);
+    
+  }
+  //This makes motor go counterclockwise
+    else{
+      digitalWrite(IN2, value);
+  digitalWrite(IN1, LOW);
+  motorSpeed = map(motorSpeed, 512, 1023, 0, 255);
+  analogWrite(EN1, motorSpeed);
+  Serial.println(motorSpeed);
+    delay(100);
+    }
+    
+}
+  
+  
+OPPGAVE 9 
+
+// Declare values
+#include <Servo.h>
+const int servoPin = 9;
+const int t = 1000;
+Servo servo;
+const int8_t EN1 = 11;
+const int8_t IN1 = 12;
+const int8_t IN2 = 13;
+int TILT_SENSOR = 2;
+int value = 0;
+
+
+void setup() {
+  pinMode(EN1, OUTPUT);
+  pinMode(IN1, OUTPUT);
+  pinMode(IN2, OUTPUT);
+  pinMode(TILT_SENSOR, INPUT_PULLUP);
+  servo.attach(servoPin);
+  Serial.begin(9600);
+}
+void loop() {
+  value = digitalRead(TILT_SENSOR); // for emergency break
+  int motorSpeed = analogRead(A0);
+  int servopos = motorSpeed;
+  //This makes motor go clockwise
+  if (motorSpeed < 500) {
+    digitalWrite(IN1, value);
+    digitalWrite(IN2, LOW);
+    //Map from 0-512 because that is the middle of the analogRead
+    //That makes it go both ways
+    motorSpeed = map(motorSpeed, 0, 512, 255, 0);
+    servopos = map(servopos, 0, 255, 0, 180);
+    analogWrite(EN1, motorSpeed);
+
+    //change servo pos depending on speed.
+    servo.write(servopos);
+    Serial.println(motorSpeed);
+    Serial.println(value);
+    delay(100);
+
+  }
+  //This makes motor go counterclockwise
+  else {
+    digitalWrite(IN2, value);
+    digitalWrite(IN1, LOW);
+    motorSpeed = map(motorSpeed, 512, 1023, 0, 255);
+    servopos = map(servopos, 0, 255, 0, 180);
+    analogWrite(EN1, motorSpeed);
+
+    //change servo pos depending on speed.
+    servo.write(servopos);
+    Serial.println(motorSpeed);
+    delay(100);
+  }
+
+}
